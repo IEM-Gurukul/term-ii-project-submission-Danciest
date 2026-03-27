@@ -1,4 +1,4 @@
-package src.model;
+package model;
 
 public class Car extends Vehicle {
     private int numberOfDoors;

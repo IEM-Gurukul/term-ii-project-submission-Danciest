@@ -1,4 +1,4 @@
-package src.model;
+package model;
 
 public class Rental {
     private Vehicle vehicle;
@@ -23,6 +23,10 @@ public class Rental {
     public void returnVehicle() {
         this.returned = true;
         vehicle.setAvailable(true);
+    }
+
+    public Vehicle getVehicle() {
+        return vehicle;
     }
 
     public boolean isReturned() {

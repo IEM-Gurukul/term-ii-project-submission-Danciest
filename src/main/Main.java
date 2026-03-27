@@ -1,6 +1,6 @@
-package src.main;
+package main;
 
-import src.model.*;
+import model.*;
 
 public class Main {
     public static void main(String[] args) {
