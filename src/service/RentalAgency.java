@@ -5,6 +5,11 @@ import model.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import exception.CustomerNotFoundException;
+import exception.RentalException;
+import exception.VehicleNotFoundException;
+import exception.VehicleUnavailableException;
+
 public class RentalAgency {
 
     private List<Vehicle> vehicles;
@@ -57,51 +62,49 @@ public class RentalAgency {
 
     // ---------------- RENTAL PROCESS ----------------
 
-    public void rentVehicle(String licensePlate, String customerId, int days) {
+    public void rentVehicle(String licensePlate, String customerId, int days)
+        throws VehicleNotFoundException, CustomerNotFoundException, VehicleUnavailableException {
 
-        Vehicle vehicle = findVehicle(licensePlate);
-        Customer customer = findCustomer(customerId);
+    Vehicle vehicle = findVehicle(licensePlate);
+    Customer customer = findCustomer(customerId);
 
-        if (vehicle == null) {
-            System.out.println("Vehicle not found.");
-            return;
-        }
-
-        if (customer == null) {
-            System.out.println("Customer not found.");
-            return;
-        }
-
-        if (!vehicle.isAvailable()) {
-            System.out.println("Vehicle is already rented.");
-            return;
-        }
-
-        Rental rental = new Rental(vehicle, customer, days);
-        rentals.add(rental);
-
-        System.out.println("Vehicle rented successfully.");
-        rental.displayRentalDetails();
+    if (vehicle == null) {
+        throw new VehicleNotFoundException("Vehicle not found: " + licensePlate);
     }
+
+    if (customer == null) {
+        throw new CustomerNotFoundException("Customer not found: " + customerId);
+    }
+
+    if (!vehicle.isAvailable()) {
+        throw new VehicleUnavailableException("Vehicle already rented: " + licensePlate);
+    }
+
+    Rental rental = new Rental(vehicle, customer, days);
+    rentals.add(rental);
+
+    System.out.println("Vehicle rented successfully.");
+    rental.displayRentalDetails();
+}
 
     // ---------------- RETURN PROCESS ----------------
 
-    public void returnVehicle(String licensePlate) {
+    public void returnVehicle(String licensePlate) throws RentalException {
 
-        for (Rental r : rentals) {
-            if (r.getVehicle().getLicensePlate().equalsIgnoreCase(licensePlate)
-                    && !r.isReturned()) {
+    for (Rental r : rentals) {
+        if (r.getVehicle().getLicensePlate().equalsIgnoreCase(licensePlate)
+                && !r.isReturned()) {
 
-                r.returnVehicle();
+            r.returnVehicle();
 
-                System.out.println("Vehicle returned successfully.");
-                r.displayRentalDetails();
-                return;
-            }
+            System.out.println("Vehicle returned successfully.");
+            r.displayRentalDetails();
+            return;
         }
-
-        System.out.println("No active rental found for this vehicle.");
     }
+
+    throw new RentalException("No active rental found for vehicle: " + licensePlate);
+}
 
     // ---------------- RENTAL HISTORY ----------------
 
@@ -112,3 +115,4 @@ public class RentalAgency {
         }
     }
 }
+

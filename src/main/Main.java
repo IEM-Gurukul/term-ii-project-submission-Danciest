@@ -1,23 +1,36 @@
 package main;
 
 import model.*;
+import service.RentalAgency;
+import exception.*;
 
 public class Main {
     public static void main(String[] args) {
 
-        Vehicle car = new Car("WB01A1234", "Honda City", 2000, 4);
-        Vehicle Motorcycle = new Motorcycle("WB02B5678", "Yamaha R15", 800, false);
-        Vehicle Truck = new Truck("WB03C9999", "Tata Truck", 5000, 10);
+        RentalAgency agency = new RentalAgency();
 
-        Customer customer = new Customer("C001", "Renesh", "LIC12345");
+        agency.addVehicle(new Car("WB01A1234", "Honda City", 2000, 4));
+        agency.addCustomer(new Customer("C001", "Renesh", "LIC12345"));
 
-        Rental rental = new Rental(car, customer, 3);
+        try {
+            agency.rentVehicle("WB01A1234", "C001", 3);
 
-        rental.displayRentalDetails();
+            // This will throw exception
+            agency.rentVehicle("WB01A1234", "C001", 2);
 
-        rental.returnVehicle();
+        } catch (VehicleNotFoundException |
+                 CustomerNotFoundException |
+                 VehicleUnavailableException e) {
 
-        System.out.println("\nAfter return:");
-        rental.displayRentalDetails();
+            System.out.println("ERROR: " + e.getMessage());
+        }
+
+        try {
+            agency.returnVehicle("WB01A1234");
+            agency.returnVehicle("WB01A1234"); // will fail
+
+        } catch (RentalException e) {
+            System.out.println("ERROR: " + e.getMessage());
+        }
     }
-}
+} 
