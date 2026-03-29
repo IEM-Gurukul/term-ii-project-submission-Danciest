@@ -4,7 +4,7 @@ import model.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import util.FileHandler;
 import exception.CustomerNotFoundException;
 import exception.RentalException;
 import exception.VehicleNotFoundException;
@@ -17,40 +17,52 @@ public class RentalAgency {
     private List<Rental> rentals;
 
     public RentalAgency() {
-        vehicles = new ArrayList<>();
-        customers = new ArrayList<>();
-        rentals = new ArrayList<>();
-    }
+    vehicles = FileHandler.loadVehicles();
+    customers = FileHandler.loadCustomers();
+    rentals = new ArrayList<>();
+}
 
     // ---------------- VEHICLE MANAGEMENT ----------------
 
-    public void addVehicle(Vehicle vehicle) {
-        vehicles.add(vehicle);
-        System.out.println("Vehicle added successfully.");
-    }
+// ---------------- VEHICLE MANAGEMENT ----------------
 
-    public void displayAllVehicles() {
-        for (Vehicle v : vehicles) {
-            v.displayDetails();
+public void addVehicle(Vehicle vehicle) {
+    vehicles.add(vehicle);
+    System.out.println("Vehicle added successfully.");
+}
+
+public void displayAllVehicles() {
+    for (Vehicle v : vehicles) {
+        v.displayDetails();
+    }
+}
+
+public Vehicle findVehicle(String licensePlate) {
+    for (Vehicle v : vehicles) {
+        if (v.getLicensePlate().equalsIgnoreCase(licensePlate)) {
+            return v;
         }
     }
+    return null;
+}
 
-    public Vehicle findVehicle(String licensePlate) {
-        for (Vehicle v : vehicles) {
-            if (v.getLicensePlate().equalsIgnoreCase(licensePlate)) {
-                return v;
-            }
-        }
-        return null;
+// ✅ ADD THIS METHOD HERE
+public void searchVehicle(String licensePlate) {
+
+    Vehicle v = findVehicle(licensePlate);
+
+    if (v != null) {
+        v.displayDetails();
+    } else {
+        System.out.println("Vehicle not found.");
     }
-
+}
     // ---------------- CUSTOMER MANAGEMENT ----------------
 
     public void addCustomer(Customer customer) {
-        customers.add(customer);
-        System.out.println("Customer registered successfully.");
-    }
-
+    customers.add(customer);
+    FileHandler.saveCustomers(customers);
+}
     public Customer findCustomer(String customerId) {
         for (Customer c : customers) {
             if (c.getCustomerId().equalsIgnoreCase(customerId)) {

@@ -25,6 +25,7 @@ public class Main {
             System.out.println("6. View Rentals");
             System.out.println("0. Exit");
             System.out.print("Enter choice: ");
+            System.out.println("7. Search Vehicle");
 
             choice = scanner.nextInt();
             scanner.nextLine(); // consume newline
@@ -53,6 +54,9 @@ public class Main {
 
                 case 6:
                     agency.displayAllRentals();
+                    break;
+                case 7:
+                    searchVehicleUI(scanner, agency);
                     break;
 
                 case 0:
@@ -169,4 +173,13 @@ public class Main {
             System.out.println("ERROR: " + e.getMessage());
         }
     }
+
+//search vehicle
+private static void searchVehicleUI(Scanner scanner, RentalAgency agency) {
+
+    System.out.print("Enter License Plate: ");
+    String plate = scanner.nextLine();
+
+    agency.searchVehicle(plate);
+    }   
 }
